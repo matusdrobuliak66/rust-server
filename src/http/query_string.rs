@@ -1,16 +1,18 @@
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct QueryString<'buf> {
     data: HashMap<&'buf str, Value<'buf>>,
 }
 
+#[derive(Debug)]
 pub enum Value<'buf> {
     Single(&'buf str),
     Mutiple(Vec<&'buf str>),
 }
 
 impl<'buf> QueryString<'buf> {
-    pub fn get(&self, key: &str) -> Option<&Value> {
+    pub fn get(&self, key: &str) -> Option<&Value<'buf>> {
         return self.data.get(key);
     }
 }
@@ -39,3 +41,4 @@ impl<'buf> From<&'buf str> for QueryString<'buf> {
         QueryString { data }
     }
 }
+

@@ -10,6 +10,7 @@ use std::str;
 use std::str::Utf8Error;
 use super::{QueryString};
 
+#[derive(Debug)]
 pub struct Request<'buf> {
     pub path: &'buf str,
     pub query_string: Option<QueryString<'buf>>,
@@ -39,7 +40,7 @@ impl<'buf> TryFrom<&'buf[u8]> for Request<'buf> {
         }
 
         Ok(
-            Self {
+            Self { 
                 path: path,
                 query_string,
                 method
@@ -52,10 +53,17 @@ impl<'buf> TryFrom<&'buf[u8]> for Request<'buf> {
 fn get_next_word(request: &str) -> Option<(&str, &str)> {
     for (i, c) in request.chars().enumerate() {
         if c == ' ' || c == '\r' {
-            return Some((&request[..i], &request[i..]));
+            // skip the delimiter itself in the remainder
+            let next = &request[i + 1..];
+            return Some((&request[..i], next));
         }
     }
-    None
+
+    if request.is_empty() {
+        None
+    } else {
+        Some((request, ""))
+    }
 }
 
 pub enum ParseError {
