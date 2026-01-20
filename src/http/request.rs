@@ -8,10 +8,11 @@ use std::fmt::Formatter;
 use std::fmt::Result as FmtResult;
 use std::str;
 use std::str::Utf8Error;
+use super::{QueryString};
 
 pub struct Request<'buf> {
     pub path: &'buf str,
-    pub query_string: Option<&'buf str>,
+    pub query_string: Option<QueryString<'buf>>,
     pub method: Method,
 }
 
@@ -33,7 +34,7 @@ impl<'buf> TryFrom<&'buf[u8]> for Request<'buf> {
 
         let mut query_string = None;
         if let Some(i) = path.find('?') {
-            query_string = Some(&path[i + 1..]);
+            query_string = Some(QueryString::from(&path[i + 1..]));
             path = &path[..i];
         }
 
