@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter, Result as FmtResult};
-use std::io::{Write, Result as IoResult};
+use std::io::{Result as IoResult, Write};
 // use std::net::TcpStream;
 
 use super::StatusCode;
@@ -22,9 +22,10 @@ impl Response {
         };
         write!(
             stream,
-            "HTTP/1.1 {} {}\r\n\r\n",
+            "HTTP/1.1 {} {}\r\n\r\n {}",
             self.status_code,
-            self.status_code.reason_phrase()
+            self.status_code.reason_phrase(),
+            body
         )
     }
 }
