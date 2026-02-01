@@ -20,11 +20,15 @@ impl Response {
             Some(b) => b,
             None => "",
         };
+
+        let content_length = body.as_bytes().len();
+
         write!(
             stream,
-            "HTTP/1.1 {} {}\r\n\r\n {}",
+            "HTTP/1.1 {} {}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
             self.status_code,
             self.status_code.reason_phrase(),
+            content_length,
             body
         )
     }

@@ -1,7 +1,6 @@
-use crate::http::{ParseError, Response};
-use crate::http::{Request, StatusCode};
-use std::convert::{TryFrom, TryInto};
-use std::{io::Read, io::Write, net::TcpListener};
+use crate::http::{ParseError, Request, Response, StatusCode};
+use std::convert::TryFrom;
+use std::{io::Read, net::TcpListener};
 
 
 pub trait Handler {
@@ -47,10 +46,6 @@ impl Server {
                             if let Err(e) = response.send(&mut stream) {
                                 println!("Failed to send response: {}", e);
                             }
-
-                            response.send(&mut stream).unwrap();
-                            // if response
-                            let res: &Result<Request, _> = &buffer[..].try_into();
                         }
                         Err(e) => {
                             println!("Failed to read from connection: {}", e);
